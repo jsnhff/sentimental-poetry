@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>False Medium</title>
+        <meta name="description" content="High quality inspirational title for your future Medium posts.">
+        <meta name="apple-mobile-web-app-title" content="Work Life Tips">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            html, body {
+                height: 100%;
+                background: -webkit-linear-gradient(90deg, #2BC0E4 10%, #EAECC6 90%); /* Chrome 10+, Saf5.1+ */
+                background:    -moz-linear-gradient(90deg, #2BC0E4 10%, #EAECC6 90%); /* FF3.6+ */
+                background:     -ms-linear-gradient(90deg, #2BC0E4 10%, #EAECC6 90%); /* IE10 */
+                background:      -o-linear-gradient(90deg, #2BC0E4 10%, #EAECC6 90%); /* Opera 11.10+ */
+                background:         linear-gradient(90deg, #2BC0E4 10%, #EAECC6 90%); /* W3C */
+            }
+            h1 {
+                font-family: 'Lato', Arial, sans-serif;
+                font-weight: 300;
+                text-align: center;
+                width: 90%;
+                margin: 0 auto;
+            }
+            .js-text {
+                text-transform: capitalize;
+            }
+            .js-text span {
+                text-transform: lowercase;
+            }
+            .wrapper {
+                display: table;
+                height: 100%;
+                width: 100%;
+            }
+            .wrapper div {
+                display: table-cell;
+                width: 100%;
+                vertical-align: middle;
+            }
+        </style>
+        <link href='http://fonts.googleapis.com/css?family=Lato:300,700' rel='stylesheet' type='text/css'>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div>
+                <h1><span class="js-text">Cat site</span></h1>
+            </div>
+        </div>
+    </body>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="https://rawgit.com/spencermountain/nlp_compromise/master/client_side/nlp.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Key vars
+            var counter = 0;
+            var counter2 = 0;
+            var newLines = "";
+            var title;
+            var subTitle;
+            var finalString;
+            var urls = ['https://medium.com/feed/frontpage-picks','https://medium.com/feed/tech-talk','https://medium.com/feed/better-humans'];
+            
+            $.ajax({
+                type: "GET",
+                url: document.location.protocol + '//ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=1000&callback=?&q=' + encodeURIComponent(urls[2]),
+                dataType: "json",
+                error: function(){
+                    alert('Unable to load feed, Incorrect path or invalid feed');
+                },
+                success: function(xml) {
+                    entries = xml.responseData.feed.entries;
+                    // Loop through the results and print out the title of the feed and link to
+                    // the url.
+                    for (var i = 0; i < entries.length; i++) {
+                        var entry = entries[i];
+                        newLines += ' '+(entry.title);
+                        counter++;
+                    }
+                    if(counter >= entries.length) {
+                        randomString();
+                    }
+                }
+            });
+
+            $.when( $.ajax({
+                type: "GET",
+                url: document.location.protocol + '//ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=1000&callback=?&q=' + encodeURIComponent(urls[0]),
+                dataType: "json",
+                error: function(){
+                    alert('Unable to load feed, Incorrect path or invalid feed');
+                },
+                success: function(xml) {
+                    entries = xml.responseData.feed.entries;
+                    // Loop through the results and print out the title of the feed and link to
+                    // the url.
+                    for (var i = 0; i < entries.length; i++) {
+                        var entry = entries[i];
+                        newLines += ' '+(entry.title);
+                        //console.log(entry.title+" added from url 0");
+                    }
+                }
+            }),
+            $.ajax({
+                type: "GET",
+                url: document.location.protocol + '//ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=1000&callback=?&q=' + encodeURIComponent(urls[2]),
+                dataType: "json",
+                error: function(){
+                    alert('Unable to load feed, Incorrect path or invalid feed');
+                },
+                success: function(xml) {
+                    entries = xml.responseData.feed.entries;
+                    // Loop through the results and print out the title of the feed and link to
+                    // the url.
+                    for (var i = 0; i < entries.length; i++) {
+                        var entry = entries[i];
+                        newLines += ' '+(entry.title);
+                        //console.log(entry.title+" added from url 2");
+                    }
+                }
+            }),
+            $.ajax({
+                type: "GET",
+                url: document.location.protocol + '//ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=1000&callback=?&q=' + encodeURIComponent(urls[1]),
+                dataType: "json",
+                error: function(){
+                    alert('Unable to load feed, Incorrect path or invalid feed');
+                },
+                success: function(xml) {
+                    entries = xml.responseData.feed.entries;
+                    // Loop through the results and print out the title of the feed and link to
+                    // the url.
+                    for (var i = 0; i < entries.length; i++) {
+                        var entry = entries[i];
+                        newLines += ' '+(entry.title);
+                        //console.log(entry.title+" added from url 1");
+                    }
+                }
+            })).done(function(v1, v2) { randomString(), myFailure() });
+
+            function myFailure() { console.log("Lame."); };
+            
+            function randomString() {
+                var words = nlp.pos(newLines, {dont_combine:true});
+                var finalSentences = [];
+                
+                // Clean all the words 
+                //for(var i = 0; i < tokens.length; i++) {
+                //    words += " "+(tokens[i].normalised);
+                //};
+                
+                // Take the words and break them into parts of speech arrays
+                var nouns = words.nouns();
+                var verbs = words.verbs();
+                var adjectives = words.adjectives();
+                var adverbs = words.adverbs();
+                var values = words.values();
+
+                // Create arrays of random parts of speech
+                var n = [];
+                var v = [];
+                var adj = [];
+                var adv = [];
+                var val = [];
+
+                n = nouns.sort(function() { return 0.5 - Math.random() });
+                v = verbs.sort(function() { return 0.5 - Math.random() });
+                adj = adjectives.sort(function() { return 0.5 - Math.random() });
+                adv = adverbs.sort(function() { return 0.5 - Math.random() });
+                val = values.sort(function() { return 0.5 - Math.random() });
+
+                for(var i = 0; i < n.length; i++) {
+                    if(n[i].pos != "PRP") {
+                        n[i] = n[i].normalised;
+                    } else {
+                        console.log(n[i]);
+                    }
+                    //console.log("noun "+n[i]);
+                };
+
+                for(var i =0; i < v.length; i++) {
+                    v[i] = v[i].normalised;
+                    //console.log("verb "+v[i]);
+                };
+
+                for(var i = 0; i < adj.length; i++) {
+                    adj[i] = adj[i].normalised;
+                    //console.log("adj "+adj[i]);
+                };
+
+                for(var i = 0; i < adv.length; i++) {
+                    adv[i] = adv[i].normalised;
+                    //console.log("adv "+adv[i]);
+                };
+                
+                for(var i = 0; i < val.length; i++) {
+                    val[i] = val[i].normalised;
+                    //console.log("val "+val[i]);
+                };
+
+                //var commaSentence = nlp.pos(n[0]+" has "+adj[0]+" "+nlp.noun(n[1]).pluralize()+", "+nlp.noun(n[2]).pluralize()+" have "+adj[1]+" "+n[3]).sentences[0];
+                //var verbSentence = nlp.pos(rWord("v")+" with "+rWord("a")+" "+rWord("n")+": ").sentences[0];
+                var adjSentence = nlp.pos(v[0]+" with "+adj[0]+" "+n[0]+": How "+n[1]+" changed my life.").sentences[0];
+                //var basicSentence = nlp.pos("Why I Quit "+n[1]).sentences[0];
+                
+                //finalSentences.push(basicSentence.text());
+                //finalSentences.push(commaSentence.text());
+                finalSentences.push(adjSentence.text());
+                //finalSentences.push(verbSentence.text());
+                //finalSentences.push(adjSentence.text());
+                var stringNum = Math.floor((Math.random() * finalSentences.length));
+                
+                $('.js-text').html(finalSentences[stringNum]);
+            }
+        });
+    </script>
+</html>
